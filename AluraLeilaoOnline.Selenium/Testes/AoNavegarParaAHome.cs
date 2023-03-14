@@ -1,4 +1,5 @@
 using AluraLeilaoOnline.Selenium.Fixtures;
+using AluraLeilaoOnline.Selenium.PageObjects;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System.Reflection;
@@ -21,8 +22,8 @@ namespace AluraLeilaoOnline.Selenium.Testes
         public void DadoChromeAbertoDeveMostrarLeiloesNoTitulo()
         {
 
-            driver.Navigate().GoToUrl("http://localhost:5000");
-            //Assert
+            var registroPO = new RegistroPO(driver);
+            registroPO.Visitar();
             Assert.Contains("Leilões", driver.Title);
 
         }
@@ -31,7 +32,26 @@ namespace AluraLeilaoOnline.Selenium.Testes
         public void DadoChromeAbertoDeveMostrarProximosLeiloesNaPagina()
         {
 
-            driver.Navigate().GoToUrl("http://localhost:5000");
+            var registroPO = new RegistroPO(driver);
+            registroPO.Visitar();
+            Assert.Contains("Próximos Leilões", driver.PageSource);
+
+        }
+
+        [Fact]
+        public void DadoChromeAbertoFormRegistroNãoDeveMostrarMensagensDeErro()
+        {
+
+            var registroPO = new RegistroPO(driver);
+            registroPO.Visitar();
+
+            var form = driver.FindElement(By.TagName("form"));
+            var spans = form.FindElements(By.TagName("span"));
+            foreach ( var span in spans )
+            {
+                Assert.True(string.IsNullOrEmpty(span.Text));
+
+            }
 
             Assert.Contains("Próximos Leilões", driver.PageSource);
 
